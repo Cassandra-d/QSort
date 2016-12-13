@@ -85,21 +85,36 @@ namespace QSort_Naive
                 new[] {1,1,1,1,1,1,1,1,0,0,0},
                 new[] {9,1,1,1,1,1,1,1,1,1,1,1},
                 new[] {9,9,1,1,1,1,1,1,1,1,1,1},
-                new[] {9,9,9,1,1,1,1,1,1,1,1,1}
+                new[] {9,9,9,1,1,1,1,1,1,1,1,1},
+                GetRandomArray(10000000),
             };
 
+            long overallMS = 0;
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             foreach (var arr in arrays)
             {
+                sw.Restart();
                 QSort(arr, 0, arr.Length - 1);
+                overallMS += sw.ElapsedMilliseconds;
+
                 if (!IsSorted(arr))
                     Print(arr);
-                else
-                    Console.WriteLine("Sorted");
             }
 
+            Console.WriteLine($"Done in {TimeSpan.FromMilliseconds(overallMS).TotalSeconds} seconds");
             Console.ReadKey();
         }
 
+        static int[] GetRandomArray(int cnt)
+        {
+            var rand = new Random((int)DateTime.Now.Ticks & 0x7FFFFFFF);
+            var randArr = new int[cnt];
+            for (int i = 0; i < cnt; i++)
+            {
+                randArr[i] = rand.Next();
+            }
+            return randArr;
+        }
         static bool IsSorted(int[] arr)
         {
             for (int i = 0; i < arr.Length - 2; i++)
