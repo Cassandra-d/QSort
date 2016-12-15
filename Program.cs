@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace QSort_Naive
 
         static void SwapIf(int[] arr, int i, int j)
         {
+            // does placing of this var outside of the if affect perf?
             var k = arr[j];
             if (arr[i] > arr[j])
             {
@@ -37,6 +39,7 @@ namespace QSort_Naive
 
         static void QSort(int[] arr, int lo, int hi)
         {
+            // placing two below if's to the end of the func to avoid unnecessary call do decreases perf
             if (hi - lo == 0)
                 return;
             if (hi - lo == 1)
@@ -103,6 +106,7 @@ namespace QSort_Naive
                 QSort2(arr, storeIndex, hi);
         }
 
+        // not finished, only a proto
         static void QSortParallel(int[] arr, int lo, int hi, int lvl = 0)
         {
             if (hi - lo == 0)
@@ -159,9 +163,30 @@ namespace QSort_Naive
 
         static void Main(string[] args)
         {
-            int cnt = 10000000;
-            var arrays = new[]
+            var arrays = GetTestArrays();
+            long overallMS = 0;
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            Console.WriteLine("Go");
+            foreach (var arr in arrays)
             {
+                sw.Restart();
+                QSort(arr, 0, arr.Length - 1);
+                overallMS += sw.ElapsedMilliseconds;
+
+                if (!IsSorted(arr))
+                    Print(arr);
+            }
+
+            Console.WriteLine($"Done in {TimeSpan.FromMilliseconds(overallMS).TotalSeconds} seconds");
+            Console.ReadKey();
+        }
+
+        private static List<int[]> GetTestArrays()
+        {
+            int cnt = 10000000;
+            return new List<int[]>
+            {
+                // correctness
                 new[] {1},
                 new[] {1,2},
                 new[] {2,1},
@@ -193,6 +218,8 @@ namespace QSort_Naive
                 new[] {9,1,1,1,1,1,1,1,1,1,1,1},
                 new[] {9,9,1,1,1,1,1,1,1,1,1,1},
                 new[] {9,9,9,1,1,1,1,1,1,1,1,1},
+
+                // perf
                 GetRandomArray(cnt),
                 GetRandomArray(cnt),
                 GetRandomArray(cnt),
@@ -203,23 +230,7 @@ namespace QSort_Naive
                 GetRandomArray(cnt),
                 GetRandomArray(cnt),
             };
-            long overallMS = 0;
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-            Console.WriteLine("Go");
-            foreach (var arr in arrays)
-            {
-                sw.Restart();
-                QSort(arr, 0, arr.Length - 1);
-                overallMS += sw.ElapsedMilliseconds;
-
-                if (!IsSorted(arr))
-                    Print(arr);
-            }
-
-            Console.WriteLine($"Done in {TimeSpan.FromMilliseconds(overallMS).TotalSeconds} seconds");
-            Console.ReadKey();
         }
-
         static int[] GetRandomArray(int cnt)
         {
             var rand = new Random((int)DateTime.Now.Ticks & 0x7FFFFFFF);
