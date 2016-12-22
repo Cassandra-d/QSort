@@ -44,7 +44,8 @@ namespace QSort_Naive
                 return;
             if (hi - lo == 1)
             {
-                SwapIf(arr, lo, hi);
+                if (arr[lo] > arr[hi])
+                    Swap(arr, lo, hi);
                 return;
             }
 
@@ -54,13 +55,12 @@ namespace QSort_Naive
 
             while (j > i)
             {
-                if (arr[j] > pivot)
+                while (arr[j] > pivot && j > i)
                 {
                     --j;
-                    continue;
                 }
 
-                while (i < j && arr[i] < pivot)
+                while (arr[i] < pivot && i < j)
                 {
                     ++i;
                 }
