@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace QSort_Naive
@@ -39,16 +40,6 @@ namespace QSort_Naive
 
         static void QSort(int[] arr, int lo, int hi)
         {
-            // placing two below if's to the end of the func to avoid unnecessary call do decreases perf
-            if (hi - lo == 0)
-                return;
-            if (hi - lo == 1)
-            {
-                if (arr[lo] > arr[hi])
-                    Swap(arr, lo, hi);
-                return;
-            }
-
             int pivot = arr[(hi + lo) / 2];
             int i = lo;
             int j = hi;
@@ -67,13 +58,15 @@ namespace QSort_Naive
 
                 if (i < j)
                 {
-                    Swap(arr, i, j);
+                    int tmp = arr[j];
+                    arr[j] = arr[i];
+                    arr[i] = tmp;
                     --j;
                 }
             }
 
-            QSort(arr, lo, i);
-            QSort(arr, i + 1, hi);
+            if (i > lo) QSort(arr, lo, i);
+            if (i + 1 < hi) QSort(arr, i + 1, hi);
         }
 
         // from https://visualgo.net/sorting
