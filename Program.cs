@@ -106,6 +106,42 @@ namespace QSort_Naive
                 QSort2(arr, storeIndex, hi);
         }
 
+        // from http://blog.bodurov.com/Visualizing-QuickSort-Algorithm/
+        public static void QSort3(int[] list, int left, int right)
+        {
+            int initial_left = left;
+            int initial_right = right;
+            var pivotValue = list[initial_left];
+
+            while (left < right)
+            {
+                while (list[right] > pivotValue && (left < right))
+                {
+                    right--;
+                }
+                if (left != right)
+                {
+                    list[left] = list[right];
+                    left++;
+                }
+                while (list[left] < pivotValue && (left < right))
+                {
+                    left++;
+                }
+                if (left != right)
+                {
+                    list[right] = list[left];
+                    right--;
+                }
+            }
+
+            list[left] = pivotValue;
+            int pivotIndex = left;
+
+            if ((pivotIndex - 1) > initial_left) QSort3(list, initial_left, pivotIndex - 1);
+            if ((pivotIndex + 1) < initial_right) QSort3(list, pivotIndex + 1, initial_right);
+        }
+
         // not finished, only a proto
         static void QSortParallel(int[] arr, int lo, int hi, int lvl = 0)
         {
@@ -220,6 +256,7 @@ namespace QSort_Naive
                 new[] {9,9,9,1,1,1,1,1,1,1,1,1},
 
                 // perf
+                GetRandomArray(cnt),
                 GetRandomArray(cnt),
                 GetRandomArray(cnt),
                 GetRandomArray(cnt),
